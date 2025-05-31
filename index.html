@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heather's Wegovy Relief Guide</title>
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: #fff;
+      color: #222;
+    }
+    #root {
+      padding: 12px;
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const SYMPTOM_DATA = [
+      {
+        symptom: "Nausea",
+        avoid: [
+          "Eat small, frequent meals (large meals can overload the stomach and worsen nausea)",
+          "Avoid high-fat, spicy, or fried foods (these delay stomach emptying and increase irritation)",
+          "Eat slowly and chew thoroughly (this makes digestion easier, reducing nausea)",
+          "Stay upright for 30 minutes after eating (prevents reflux and aids digestion)"
+        ],
+        treat: [
+          "Sip ginger tea or ginger ale with real ginger (ginger calms the stomach and reduces nausea)",
+          "Eat plain crackers or toast (bland foods help settle the stomach and absorb acid)",
+          "Try ginger chews or mints (ginger and mint can soothe stomach muscles and reduce nausea)",
+          "Take small sips of water (prevents dehydration and is gentle on the stomach)"
+        ]
+      },
+      {
+        symptom: "Constipation",
+        avoid: [
+          "Increase dietary fiber gradually (sudden increases can cause bloating; gradual increase supports gut adjustment and regularity)",
+          "Drink at least 64 oz (1.9 L) of water daily (water is necessary for fiber to relieve constipation; inadequate hydration can worsen symptoms)",
+          "Stay physically active (movement stimulates the intestines and promotes regular bowel function)"
+        ],
+        treat: [
+          "Use a fiber supplement (e.g., psyllium) (adds bulk and moisture to stool, making it easier to pass)",
+          "Take a short walk (physical activity helps stimulate the bowels and can relieve mild constipation)",
+          "Consider a stool softener (ask your doctor first) (softeners add water to stool, making it easier to pass, but should be used with medical guidance)"
+        ]
+      },
+      {
+        symptom: "Diarrhea",
+        avoid: [
+          "Avoid caffeine and alcohol (these can irritate the digestive tract and worsen diarrhea)",
+          "Introduce fiber slowly (helps bulk up stools but should be increased gradually)",
+          "Avoid fatty, greasy foods (these can be harder to digest and may worsen diarrhea)"
+        ],
+        treat: [
+          "BRAT diet: Bananas, Rice, Applesauce, Toast (bland foods that are gentle on the stomach)",
+          "Hydrate with water or electrolyte drinks (replenishes fluids and electrolytes lost through diarrhea)",
+          "Rest as needed (allows your body to recover and heal)"
+        ]
+      },
+      {
+        symptom: "Fatigue",
+        avoid: [
+          "Eat balanced meals even if not hungry (skipping meals or poor nutrition leads to low blood sugar and worsens fatigue)",
+          "Stay hydrated (dehydration commonly causes or worsens fatigue)",
+          "Avoid skipping meals (irregular eating can cause drops in energy and blood sugar, increasing tiredness)"
+        ],
+        treat: [
+          "Rest and pace yourself (recovery and energy conservation help prevent overexertion)",
+          "Monitor blood pressure if feeling dizzy (dizziness or fatigue may signal low blood pressure or dehydration)",
+          "Check in with your provider if ongoing (persistent fatigue may require medical evaluation and management)"
+        ]
+      },
+      {
+        symptom: "Bloating",
+        avoid: [
+          "Limit carbonated drinks (these add extra gas to the digestive tract, worsening bloating)",
+          "Eat slowly, chew thoroughly (slow eating and thorough chewing prevent excess air swallowing and aid digestion)",
+          "Avoid beans and cruciferous vegetables if sensitive (these foods produce more gas during digestion and can increase bloating in some people)"
+        ],
+        treat: [
+          "Gentle walk after eating (movement helps move gas through the digestive system and relieves discomfort)",
+          "Peppermint tea may help (peppermint relaxes digestive tract muscles and may reduce bloating)",
+          "Loosen tight clothing (reduces abdominal pressure and discomfort associated with bloating)"
+        ]
+      },
+      {
+        symptom: "Injection Site Pain",
+        avoid: [
+          "Rotate injection sites each week (prevents tissue irritation, lumps, and increased pain from repeated injections in the same spot)",
+          "Allow alcohol to dry before injecting (prevents stinging and skin irritation from alcohol entering the tissue)",
+          "Use a new needle for each injection (dull needles cause more pain and increase infection risk)"
+        ],
+        treat: [
+          "Apply cool compress after injection (cold reduces inflammation, numbs the area, and eases pain)",
+          "Gently massage area (improves blood flow and helps disperse medication, reducing tenderness)",
+          "If red/swollen, consult your provider (may indicate infection or allergic reaction; early assessment prevents complications)"
+        ]
+      },
+      {
+        symptom: "Headache",
+        avoid: [
+          "Stay hydrated",
+          "Avoid skipping meals",
+          "Limit caffeine"
+        ],
+        treat: [
+          "Rest in a quiet room",
+          "Drink water",
+          "Use OTC pain relief if approved by doctor"
+        ]
+      }
+    ];
+
+    const MACKENZIE_BLUE = "#245873";
+    const MACKENZIE_GREEN = "#3A6158";
+
+    function App() {
+      const [openSymptom, setOpenSymptom] = useState(null);
+
+      return (
+        <div>
+          {/* HEADER */}
+          <header
+            style={{
+              borderBottom: `4px solid ${MACKENZIE_BLUE}`,
+              paddingBottom: 12,
+              marginBottom: 20,
+              textAlign: "center"
+            }}
+          >
+            <h1 style={{ fontSize: 24, margin: 0, color: MACKENZIE_BLUE }}>
+              Heather's Wegovy Relief Guide
+            </h1>
+            <div style={{ fontSize: 16, marginTop: 4, color: MACKENZIE_GREEN }}>
+              Quick help for common side effects
+            </div>
+          </header>
+
+          {/* SYMPTOM BUTTONS */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {SYMPTOM_DATA.map(({ symptom }, idx) => (
+              <button
+                key={symptom}
+                onClick={() => setOpenSymptom(openSymptom === idx ? null : idx)}
+                style={{
+                  background: openSymptom === idx ? MACKENZIE_GREEN : MACKENZIE_BLUE,
+                  color: "#fff",
+                  fontSize: 18,
+                  padding: "16px 0",
+                  border: "none",
+                  borderRadius: 8,
+                  fontWeight: 600,
+                  letterSpacing: 1,
+                  cursor: "pointer",
+                  outline: "none"
+                }}
+                aria-expanded={openSymptom === idx}
+                aria-controls={`panel-${idx}`}
+              >
+                {symptom}
+              </button>
+            ))}
+          </div>
+
+          {/* SYMPTOM DETAILS */}
+          {openSymptom !== null && (
+            <section
+              id={`panel-${openSymptom}`}
+              style={{
+                background: "#f5f9f6",
+                border: `2px solid ${MACKENZIE_GREEN}`,
+                borderRadius: 8,
+                marginTop: 14,
+                marginBottom: 14,
+                padding: 16,
+                fontSize: 17
+              }}
+            >
+              <div style={{ fontWeight: "bold", marginBottom: 8, fontSize: 18 }}>
+                {SYMPTOM_DATA[openSymptom].symptom}
+              </div>
+              <div>
+                <div style={{ fontWeight: "bold", color: MACKENZIE_GREEN }}>To Avoid:</div>
+                <ul>
+                  {SYMPTOM_DATA[openSymptom].avoid.map((tip, i) => (
+                    <li key={i}>{tip}</li>
+                  ))}
+                </ul>
+                <div style={{ fontWeight: "bold", color: MACKENZIE_BLUE }}>To Treat:</div>
+                <ul>
+                  {SYMPTOM_DATA[openSymptom].treat.map((tip, i) => (
+                    <li key={i}>{tip}</li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          )}
+
+          {/* LINK TO FULL GUIDE */}
+          <div style={{ textAlign: "center", margin: "24px 0 10px 0" }}>
+            <a
+              href="#full-guide"
+              style={{
+                display: "inline-block",
+                color: MACKENZIE_BLUE,
+                background: "#e6f0ee",
+                fontWeight: 600,
+                padding: "10px 20px",
+                borderRadius: 8,
+                textDecoration: "none",
+                fontSize: 17
+              }}
+            >
+              See Full Best Practices Guide
+            </a>
+          </div>
+
+          {/* FULL GUIDE (ANCHOR) */}
+          <section id="full-guide" style={{ margin: "30px 0 12px 0" }}>
+            <h2 style={{ color: MACKENZIE_GREEN, fontSize: 21 }}>Full Best Practices Guide</h2>
+            <ul style={{ fontSize: 16, paddingLeft: 22 }}>
+              <li>
+                <b>Eat small, frequent meals.</b>
+                <div style={{ fontWeight: 400 }}>
+                  Large meals can overwhelm the digestive system and worsen symptoms like nausea, bloating, and heartburn. Smaller, more frequent meals are easier to digest and help maintain steady blood sugar and energy.
+                </div>
+              </li>
+              <li>
+                <b>Avoid fatty, spicy, or heavy foods.</b>
+                <div style={{ fontWeight: 400 }}>
+                  These foods can irritate the stomach lining, delay stomach emptying, and make nausea, diarrhea, or bloating worse.
+                </div>
+              </li>
+              <li>
+                <b>Hydrate well—64 oz (1.9 L) water daily.</b>
+                <div style={{ fontWeight: 400 }}>
+                  Proper hydration supports digestion, reduces headache and fatigue, and is critical to prevent constipation. Extra fluids may be needed if you experience vomiting or diarrhea.
+                </div>
+              </li>
+              <li>
+                <b>Use electrolyte drinks if vomiting/diarrhea occurs.</b>
+                <div style={{ fontWeight: 400 }}>
+                  Electrolytes like sodium and potassium are lost with vomiting or diarrhea. Replacing them prevents dehydration and maintains muscle and nerve function.
+                </div>
+              </li>
+              <li>
+                <b>Stay upright after eating (at least 30 minutes).</b>
+                <div style={{ fontWeight: 400 }}>
+                  Lying down immediately after meals can increase the risk of acid reflux and slow digestion, both of which can make nausea and heartburn worse.
+                </div>
+              </li>
+              <li>
+                <b>Rotate injection sites (abdomen, thigh, upper arm). Always use a new needle.</b>
+                <div style={{ fontWeight: 400 }}>
+                  Rotating sites prevents irritation, lumps, or skin changes. Using a new needle each time reduces pain and risk of infection.
+                </div>
+              </li>
+              <li>
+                <b>Increase dietary fiber gradually.</b>
+                <div style={{ fontWeight: 400 }}>
+                  Gradual increases help your gut adjust, preventing bloating or gas. Sudden large increases can make constipation or bloating worse.
+                </div>
+              </li>
+              <li>
+                <b>Stay physically active.</b>
+                <div style={{ fontWeight: 400 }}>
+                  Activity stimulates intestinal movement, helping prevent or treat constipation and fatigue.
+                </div>
+              </li>
+              <li>
+                <b>Eat slowly and chew thoroughly.</b>
+                <div style={{ fontWeight: 400 }}>
+                  This reduces swallowed air and helps digestion, lowering the risk of bloating, nausea, and indigestion.
+                </div>
+              </li>
+              <li>
+                <b>Limit carbonated drinks.</b>
+                <div style={{ fontWeight: 400 }}>
+                  Carbonation introduces extra gas into your digestive tract, which can worsen bloating and discomfort.
+                </div>
+              </li>
+              <li>
+                <b>Avoid caffeine and alcohol if you have diarrhea.</b>
+                <div style={{ fontWeight: 400 }}>
+                  Both can irritate your digestive tract and worsen dehydration by increasing fluid loss.
+                </div>
+              </li>
+              <li>
+                <b>Monitor and log side effects.</b>
+                <div style={{ fontWeight: 400 }}>
+                  Keeping a record helps you and your provider identify patterns, triggers, or persistent issues needing medical attention.
+                </div>
+              </li>
+              <li>
+                <b>Consult your provider if side effects persist or worsen.</b>
+                <div style={{ fontWeight: 400 }}>
+                  Some symptoms may require medical evaluation or adjustment of your treatment plan to ensure your safety and comfort.
+                </div>
+              </li>
+            </ul>
+          </section>
+        </div>
+      );
+    }
+
+    // Render the app
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
