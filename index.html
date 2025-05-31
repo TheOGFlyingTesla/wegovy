@@ -114,14 +114,14 @@
       {
         symptom: "Headache",
         avoid: [
-          "Stay hydrated",
-          "Avoid skipping meals",
-          "Limit caffeine"
+          "Stay hydrated (dehydration is a common trigger for headaches; regular water intake helps prevent them)",
+          "Avoid skipping meals (low blood sugar from missed meals can trigger headaches)",
+          "Limit caffeine (too much caffeine can cause withdrawal headaches and worsen dehydration)"
         ],
         treat: [
-          "Rest in a quiet room",
-          "Drink water",
-          "Use OTC pain relief if approved by doctor"
+          "Rest in a quiet room (reducing light and noise helps alleviate headache symptoms)",
+          "Drink water (replenishes fluids and addresses headaches caused by dehydration)",
+          "Use OTC pain relief if approved by doctor (acetaminophen or ibuprofen can reduce pain but should be taken only with your provider's guidance)"
         ]
       }
     ];
@@ -131,6 +131,7 @@
 
     function App() {
       const [openSymptom, setOpenSymptom] = useState(null);
+      const [showFullGuide, setShowFullGuide] = useState(false);
 
       return (
         <div>
@@ -197,15 +198,41 @@
               <div>
                 <div style={{ fontWeight: "bold", color: MACKENZIE_GREEN }}>To Avoid:</div>
                 <ul>
-                  {SYMPTOM_DATA[openSymptom].avoid.map((tip, i) => (
-                    <li key={i}>{tip}</li>
-                  ))}
+                  {SYMPTOM_DATA[openSymptom].avoid.map((tip, i) => {
+                    const [mainText, explanation] = tip.split(' (');
+                    const cleanExplanation = explanation ? explanation.replace(/\)$/, '') : '';
+                    return (
+                      <li key={i}>
+                        {mainText}
+                        {explanation && (
+                          <ul style={{ marginTop: '4px', marginBottom: '8px' }}>
+                            <li style={{ fontStyle: 'italic', color: '#555' }}>
+                              {cleanExplanation}
+                            </li>
+                          </ul>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
-                <div style={{ fontWeight: "bold", color: MACKENZIE_BLUE }}>To Treat:</div>
+                <div style={{ fontWeight: "bold", color: MACKENZIE_BLUE, marginTop: '12px' }}>To Treat:</div>
                 <ul>
-                  {SYMPTOM_DATA[openSymptom].treat.map((tip, i) => (
-                    <li key={i}>{tip}</li>
-                  ))}
+                  {SYMPTOM_DATA[openSymptom].treat.map((tip, i) => {
+                    const [mainText, explanation] = tip.split(' (');
+                    const cleanExplanation = explanation ? explanation.replace(/\)$/, '') : '';
+                    return (
+                      <li key={i}>
+                        {mainText}
+                        {explanation && (
+                          <ul style={{ marginTop: '4px', marginBottom: '8px' }}>
+                            <li style={{ fontStyle: 'italic', color: '#555' }}>
+                              {cleanExplanation}
+                            </li>
+                          </ul>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </section>
@@ -213,25 +240,31 @@
 
           {/* LINK TO FULL GUIDE */}
           <div style={{ textAlign: "center", margin: "24px 0 10px 0" }}>
-            <a
-              href="#full-guide"
+            <button
+              onClick={() => setShowFullGuide(!showFullGuide)}
               style={{
                 display: "inline-block",
                 color: MACKENZIE_BLUE,
                 background: "#e6f0ee",
                 fontWeight: 600,
                 padding: "10px 20px",
+                border: "none",
                 borderRadius: 8,
-                textDecoration: "none",
+                cursor: "pointer",
                 fontSize: 17
               }}
             >
-              See Full Best Practices Guide
-            </a>
+              {showFullGuide ? 'Hide Full Best Practices Guide' : 'See Full Best Practices Guide'}
+            </button>
           </div>
 
           {/* FULL GUIDE (ANCHOR) */}
-          <section id="full-guide" style={{ margin: "30px 0 12px 0" }}>
+          <section id="full-guide" style={{ 
+            margin: showFullGuide ? "30px 0 12px 0" : "0",
+            maxHeight: showFullGuide ? "1000px" : "0",
+            overflow: "hidden",
+            transition: "all 0.3s ease-in-out"
+          }}>
             <h2 style={{ color: MACKENZIE_GREEN, fontSize: 21 }}>Full Best Practices Guide</h2>
             <ul style={{ fontSize: 16, paddingLeft: 22 }}>
               <li>
